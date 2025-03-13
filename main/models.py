@@ -116,4 +116,6 @@ class TemporaryLocation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        index_together = ['session_id', 'participant_identifier']
+        indexes = [
+            models.Index(fields=['session_id', 'participant_identifier']),
+        ]
