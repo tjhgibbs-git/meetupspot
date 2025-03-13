@@ -90,5 +90,6 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # TfL API configuration
-TFL_APP_ID = os.getenv('TFL_APP_ID')
-TFL_API_KEY = os.getenv('TFL_API_KEY')
+# Use PRIMARY_KEY for APP_ID and SECONDARY_KEY for API_KEY
+TFL_APP_ID = os.getenv('TFL_PRIMARY_KEY')
+TFL_API_KEY = os.getenv('TFL_SECONDARY_KEY')
