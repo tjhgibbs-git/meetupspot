@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',  # GeoDjango for spatial operations
+    'main',
+    'rest_framework',  # For API endpoints
 ]
 
 MIDDLEWARE = [
@@ -54,7 +58,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Added for project templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,11 +77,34 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# For development, we'll keep SQLite for simplicity
+# When ready to deploy, uncomment the PostgreSQL + PostGIS configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+    # 'default': {
+    #     'ENGINE': 'django.contrib.gis.db.backends.postgis',
+    #     'NAME': 'london_meetup',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'your_password',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # }
+}
+
+# Cache configuration
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+    }
+    # Uncomment for Redis caching when needed
+    # "default": {
+    #     "BACKEND": "django.core.cache.backends.redis.RedisCache",
+    #     "LOCATION": "redis://127.0.0.1:6379/1",
+    # }
 }
 
 
@@ -116,8 +143,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# TfL API credentials (to be added to environment variables in production)
+TFL_APP_ID = 'your_app_id_here'
+TFL_API_KEY = 'your_api_key_here'
